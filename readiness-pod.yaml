@@ -1,0 +1,44 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: readiness-pod
+  labels:
+    app: rns
+spec:
+  containers:
+  - name: readiness
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+#    readinessProbe:
+#      exec:
+#        command:
+#        - cat
+#        - /usr/share/nginx/html/index.html123
+#      initialDelaySeconds: 5
+#      periodSeconds: 5
+
+    readinessProbe:
+      tcpSocket:
+         port: 80
+#      httpGet:
+#        path: /
+#        port: 80
+      initialDelaySeconds: 5
+      periodSeconds: 5
+
+---
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: readiness-svc
+spec:
+  selector:
+    app: rns
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: 80
+
+
