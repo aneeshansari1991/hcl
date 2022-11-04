@@ -1,0 +1,550 @@
+    1  sudo apt-get update && sudo curl -SSL https://get.docker.com/ | sh
+    2  docker ps
+    3  docker run httpd
+    4  docker run -d --name app01 -p 8080:80 httpd
+    5  docker ps
+    6  docker exec -it app01 bash
+    7  mkdir -p /home/ubuntu/share
+    8  docker run -it -p 80:80 -v /home/ubuntu/share:/var/www/html --name container1 ubuntu:14.04 /bin/bash
+    9  cd /home/ubuntu/share/
+   10  ls
+   11  cat index.html 
+   12  cat > index.html 
+   13  ls
+   14  cat index.html 
+   15  docker exec -it container1 bash
+   16  ls
+   17  cd
+   18  docker ps
+   19  docker rm -f app01 
+   20  docker ps
+   21  docker container inspect container1 
+   22  docker ps
+   23  docker run -it -p 8080:80 -v /home/ubuntu/share:/var/www/html --name container2 ubuntu:14.04 /bin/bash
+   24  docker ps
+   25  docker exec -it container2 bash
+   26  docker ps
+   27  cd /var/lib/docker/
+   28  ls
+   29  cd containers/
+   30  pwd
+   31  ls
+   32  docker ps
+   33  ls
+   34  docker ps -a
+   35  docker rm thirsty_sutherland
+   36  docker ps -a
+   37  ls
+   38  cd 34d62dc3ea5d5f2099ada92c45010b106751cf342820028544db552a8ed10138
+   39  ls
+   40  cd ..
+   41  ls
+   42  docker imges
+   43  docker images
+   44  cd image/
+   45  ls
+   46  cd overlay2/imagedb/content/sha256/
+   47  ls
+   48  cd ..
+   49  cd ../..
+   50  ls
+   51  cd ../../
+   52  ls
+   53  cd volumes/
+   54  ls
+   55  docker volume ls
+   56  docker volume create myvol 
+   57  docker volume ls
+   58  docker volume inspect myvol
+   59  pwd
+   60  ls
+   61  cd myvol/
+   62  ls
+   63  cd _data/
+   64  ls
+   65  cd
+   66  docker ps
+   67  docker run -it -p 9090:80 -v myvol:/var/www/html --name app ubuntu:14.04 /bin/bash
+   68  docker ps
+   69  docker container inspect app 
+   70  cd -
+   71  ls
+   72  docker ps
+   73  docker rm -f app 
+   74  docker ps
+   75  docker volume ls
+   76  ls
+   77  cat > index.html 
+   78  docker run -it -p 9090:80 -v myvol:/var/www/html --name app ubuntu:14.04 /bin/bash
+   79  cd
+   80  docker volume create cloudthat
+   81  docker run -d -p 80:80 --name=Nginx --mount source=cloudthat,destination=/usr/share/nginx/html nginx:latest
+   82  docker container prune 
+   83  docker ps
+   84  docker rm $(docker ps -aq)
+   85  docker rm -f $(docker ps -aq)
+   86  docker run -d -p 80:80 --name=Nginx --mount source=cloudthat,destination=/usr/share/nginx/html nginx:latest
+   87  docker ps
+   88  docker exec -it Nginx bash
+   89  docker ps
+   90  docker container inspect Nginx 
+   91  docker ps
+   92  docker stop Nginx 
+   93  docker container prune 
+   94  docker ps -a
+   95  docker run -it --name wp -p 80:80 ubuntu:16.04
+   96  docker ps -a
+   97  docker run -it --name wp -p 80:80 ubuntu:16.04 /bin/bash
+   98  docker container prune 
+   99  docker run -it --name wp -p 80:80 ubuntu:16.04 /bin/bash
+  100  docker ps
+  101  docker container prune 
+  102  docker run -it --name wp -p 80:80 ubuntu:16.04 
+  103  docker ps
+  104  docker commit wp wordpress:v1
+  105  docker images
+  106  docker rm -f wp 
+  107  docker ps
+  108  docker run -it --name wp -p 80:80 wordpress:v1 
+  109  docker images
+  110  docker login mydocker02.azurecr.io
+  111  cat /root/.docker/config.json
+  112  echo bXlkb2NrZXIwMjpybncwN2tOZytwaFBYU1pZM2trYUM5WkZUZ1lhZ2l1Sg== | base64 -d
+  113  docker logout 
+  114  cat /root/.docker/config.json
+  115  docker ps
+  116  docker login mydocker02.azurecr.io
+  117  rm /root/.docker/config.json
+  118  docker login mydocker02.azurecr.io
+  119  docker images
+  120  #mydocker02.azurecr.io/wordpress:v1 
+  121  docker tag ec2177f5fc54 mydocker02.azurecr.io/wordpress:v1
+  122  docker images
+  123  docker push mydocker02.azurecr.io/wordpress:v1 
+  124  docker ps
+  125  docker rm -f wp 
+  126  docker ps
+  127  docker images
+  128  docker rmi wordpress:v1 
+  129  docker images
+  130  docker rmi mydocker02.azurecr.io/wordpress:v1 
+  131  docker images
+  132  docker pull mydocker02.azurecr.io/wordpress:v1
+  133  docker image ls
+  134  docker images
+  135  docker run -it --name wp -p 80:80 mydocker02.azurecr.io/wordpress:v1 
+  136  docker ps
+  137  docker login -u mydocker02 mydocker02.azurecr.io
+  138  docker images
+  139  docker ps
+  140  docker exec -it wp bash
+  141  docker images
+  142  docker history httpd:latest 
+  143  docker history httpd:latest --no-trunc 
+  144  FROM ubuntu:16.04
+  145  MAINTAINER Username "user@example.com"
+  146  ENV DEBIAN_FRONTEND=noninteractive
+  147  RUN apt-get update && apt-get -q -y install apache2 mysql-server php php-fpm php-mysql libapache2-mod-php wget vim
+  148  RUN wget http://wordpress.org/latest.tar.gz && tar xzvf latest.tar.gz && cp -R ./wordpress/* /var/www/html && rm /var/www/html/index.html
+  149  mkdir wordpress
+  150  cd wordpress/
+  151  vi Dockerfile
+  152  docker build -t wordpress:v2 .
+  153  docker images
+  154  docker run -itd --name myapp -p 8080:80 wordpress:v2 
+  155  docker ps
+  156  docker rm -f wp 
+  157  docker ps
+  158  docker exec -it myapp bash
+  159  vi Dockerfile 
+  160  docker ps
+  161  docker rm -f myapp 
+  162  docker -itd --name app01 ubuntu:18.04
+  163  docker run -itd --name app01 ubuntu:18.04
+  164  docker run -itd --name app02 ubuntu:18.04
+  165  docker ps
+  166  docker container inspect app02
+  167  docker ps
+  168  docker exec -it app01 bash
+  169  docker ps
+  170  docker exec -it app02 bash
+  171  docker ps
+  172  docker exec -it app01 bash
+  173  docker network ls
+  174  docker run -itd --name app03 --network none ubuntu:18.04
+  175  docker container inspect app03
+  176  docker network ls
+  177  ip a
+  178  docker network ls
+  179  docker run -itd --name web01 --network host httpd:latest
+  180  docker ps
+  181  docker container inspect web01
+  182  docker ps
+  183  docker run -itd --name web02 --network host httpd:latest
+  184  docker ps
+  185  docker ps -a
+  186  docker logs web02
+  187  docker network ls
+  188  docker ps
+  189  docker container inspect app01 
+  190  ip a
+  191  docker container inspect app01 
+  192  ip a
+  193  docker container inspect app01 
+  194  docker ps
+  195  docker exec -it app01 bash
+  196  docker network ls
+  197  docker network create mycon 
+  198  docker network ls
+  199  docker network inspect mycon 
+  200  docker network 
+  201  docker network inspect bridge
+  202  ip addr
+  203  docker run -itd --name myapp01 --network mycon httpd:latest
+  204  docker run -itd --name myapp02 --network mycon httpd:latest
+  205  docker ps
+  206  docker exec -it myapp01 bash
+  207  docker ps
+  208  docker exec -it myapp02 bash
+  209  docker ps
+  210  docker exec -it myapp01 bash
+  211  docker exec -it myapp02 bash
+  212  docker network ls
+  213  docker network inspect mycon 
+  214  docker ps
+  215  docker rm -f $(docker ps -aq)
+  216  docker ps
+  217  docker run -d --name wordpress -p 8080:80 --network mycon wordpress:latest
+  218  docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=test123 --network mycon mysql:5.7
+  219  docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=test123 -e MYSQL_DATABASE=wordpress --network mycon mysql:5.7
+  220  docker ps
+  221  mkdir app
+  222  cd app/
+  223  vi doker-compose.yaml
+  224  docker-compose
+  225  apt  install docker-compose
+  226  docker-compose
+  227  docker-compose -d 
+  228  docker-compose up -d 
+  229  ls
+  230  docker-compose up -d 
+  231  ls
+  232  mv doker-compose.yaml docker-compose.yaml 
+  233  docker-compose up -d 
+  234  docker rm -f $(docker ps -aq)
+  235  docker-compose up -d 
+  236  docker network ls
+  237  docker ps
+  238  docker-compose ls
+  239  docker-compose ps
+  240  docker ps
+  241  vi docker-compose.yaml 
+  242  docker run -d   -it   --name tmptest   --mount type=tmpfs,destination=/app   nginx:latest
+  243  docker ps
+  244  docker container inspect tmptest 
+  245  vi docker-compose.yaml 
+  246  apt install azurecli -y
+  247  apt install azure-cli -y
+  248  curl -LO https://dl.k8s.io/release/v1.25.0/bin/linux/amd64/kubectl
+  249  rm kubectl 
+  250  curl -LO https://dl.k8s.io/release/v1.22.0/bin/linux/amd64/kubectl
+  251  chmod +x kubectl 
+  252  mv kubectl /usr/bin/
+  253  history 
+  254  az account set --subscription 8057da5a-5f11-44d2-b085-f9daa423e055
+  255  az login
+  256  az account set --subscription 8057da5a-5f11-44d2-b085-f9daa423e055
+  257  ls -a
+  258  az aks get-credentials --resource-group mykube --name myk8s
+  259  ls -a
+  260  cd .kube/
+  261  ls
+  262  vi config 
+  263  cd
+  264  kubectl get nodes
+  265  history 
+  266  vi .bashrc 
+  267  source .bashrc 
+  268  kubectl get namespaces 
+  269  kubectl get pod -n kube-system 
+  270  kubectl get pod 
+  271  kubectl get namespaces 
+  272  kubectl get pod -n calico-system 
+  273  kubectl get pod
+  274  kubectl get deployments.apps 
+  275  kubectl get replicationcontrollers 
+  276  kubectl get pod
+  277  kubectl run test --image=nginx:latest --port 80 
+  278  kubectl get pod
+  279  kubectl describe pod test
+  280  kubectl get pod
+  281  kubectl describe pod test
+  282  kubectl get pod
+  283  kubectl describe pod test
+  284  kubectl get pod
+  285  kubectl logs test 
+  286  kubectl run test --image=nginx:latest --port 80 --dry-run=client -o yaml
+  287  kubectl run test --image=nginx:latest --port 80
+  288  vi pod.yaml 
+  289  kubectl get pod
+  290  vi pod.yaml 
+  291  ls
+  292  kubectl create -f pod.yaml 
+  293  kubectl get pod 
+  294  kubectl describe pod mypod 
+  295  kubectl get pod 
+  296  kubectl logs test 
+  297  kubectl get pod 
+  298  kubectl logs mypod
+  299  kubectl logs mypod -c con1 
+  300  kubectl logs mypod -c con2
+  301  kubectl get pod
+  302  kubectl describe pod mypod 
+  303  kubectl get nodes
+  304  kubectl describe pod mypod 
+  305  kubectl get nodes
+  306  kubectl describe pod mypod 
+  307  kubectl get pod
+  308  kubectl delete -f pod.yaml 
+  309  vi pod.yaml 
+  310  kubectl create -f pod.yaml 
+  311  kubectl get pod
+  312  kubectl describe pod mypod 
+  313  kubectl get pod -o wide
+  314  kubectl exec -it test -- bash 
+  315  kubectl exec -it mypod -c con1 -- bash 
+  316  kubectl exec -it mypod -c con2 -- bash 
+  317  mkdir myapp
+  318  mv pod.yaml myapp/
+  319  git init 
+  320  git add
+  321  git add .
+  322  cd myapp/
+  323  git init 
+  324  git add .
+  325  git commit -m "first commit"
+  326  git config --global --edit
+  327  git commit -m "first commit"
+  328  git branch -M main
+  329  git remote add origin git@github.com:aneeshansari1991/hcl.git
+  330  ssh-keygen 
+  331  cd 
+  332  cd .ssh/
+  333  cat id_rsa
+  334  cat id_rsa.pub 
+  335  git remote add origin git@github.com:aneeshansari1991/hcl.git
+  336  cd 
+  337  cd myapp/
+  338  ls
+  339  git remote add origin git@github.com:aneeshansari1991/hcl.git
+  340  git push -u origin main
+  341  history 
+  342  ll
+  343  vi pod.yaml 
+  344  ls
+  345  cp pod.yaml pod-svc.yaml
+  346  vi pod-svc.yaml 
+  347  kubectl create -f pod-svc.yaml 
+  348  kubectl delete -f pod-svc.yaml 
+  349  kubectl get pod 
+  350  kubectl get service
+  351  kubectl get all
+  352  kubectl create -f pod-svc.yaml 
+  353  kubectl get all
+  354  vi pod-svc.yaml 
+  355  kubectl get pod
+  356  kubectl delete pod test
+  357  kubectl delete pod mypod 
+  358  vi pod-svc.yaml 
+  359  kubectl get service
+  360  kubectl delete service mypod-svc 
+  361  kubectl get service
+  362  kubectl create -f pod-svc.yaml 
+  363  kubectl get pod
+  364  kubectl get svc
+  365  kubectl get pod
+  366  kubectl describe po mypod 
+  367  kubectl get servic
+  368  kubectl get pod -o wide
+  369  kubectl describe svc mypod-svc
+  370  kubectl get pod
+  371  kubectl delete pod mypod 
+  372  kubectl describe svc mypod-svc
+  373  vi pvc.yaml
+  374  kubectl get storageclasses.storage.k8s.io 
+  375  kubectl create -f pvc.yaml 
+  376  kubectl get pvc
+  377  kubectl describe pvc dynamic-claim 
+  378  vi pvc-claim-pod.yaml
+  379  kubectl get pvc
+  380  vi pvc-claim-pod.yaml
+  381  kubectl create -f pvc-claim-pod.yaml 
+  382  kubectl get pod
+  383  kubectl describe pod dynamic-pod 
+  384  kubectl get pvc
+  385  kubectl describe pod dynamic-pod 
+  386  kubectl get pod
+  387  kubectl describe pod dynamic-pod 
+  388  kubectl get pod
+  389  kubectl exec -it dynamic-pod -- bash
+  390  kubectl get pod
+  391  kubectl delete pod dynamic-pod 
+  392  vi pvc-claim-pod.yaml 
+  393  kubectl get pvc
+  394  kubectl create -f pvc-claim-pod.yaml 
+  395  kubectl get pod
+  396  kubectl exec -it dynamic-pod -- bash
+  397  git add .
+  398  git commit -m "pvc"
+  399  git push origin main 
+  400  vi nginx-rc.yaml
+  401  vi pod.yaml 
+  402  kubectl create -f pod.yaml 
+  403  kubectl get pod --show-labels 
+  404  vi nginx-rc.yaml
+  405  kubectl create -f nginx-rc.yaml 
+  406  kubectl get replicationcontrollers 
+  407  kubectl get rc
+  408  kubectl get pod 
+  409  kubectl get pod --show-labels 
+  410  kubectl create -f pod-svc.yaml 
+  411  kubectl get svc
+  412  kubectl describe service mypod-svc
+  413  kubectl get pod -o wide
+  414  kubectl get rc
+  415  kubectl get rc -o wide
+  416  kubectl edit rc nginx 
+  417  kubectl get rc -o wide
+  418  kubectl get pod
+  419  kubectl delete pod nginx-jctwv
+  420  kubectl get pod
+  421  kubectl describe pod nginx-6xg92
+  422  kubectl get pod
+  423  kubectl describe pod nginx-jghwb
+  424  kubectl get pod
+  425  kubectl get rc
+  426  kubectl scale replicationcontroller nginx --replicas=6
+  427  kubectl get rc
+  428  kubectl get pod
+  429  kubectl scale replicationcontroller nginx --replicas=3
+  430  kubectl get pod
+  431  kubectl delete -f nginx-rc.yaml 
+  432  kubectl get pod
+  433  kubectl create -f nginx-rc.yaml 
+  434  kubectl edit rc nginx 
+  435  kubectl rolling-update nginx --image=nginx
+  436  kubectl set image replicationcontroller/nginx --image=httpd:latest
+  437  #kubectl set image replicationcontroller/nginx httpd:latest
+  438  kubectl edit rc nginx 
+  439  kubectl set image replicationcontroller/nginx nginx=httpd:latest
+  440  kubectl get rc -o wide
+  441  kubectl get pod
+  442  kubectl describe pod nginx-8pqkb
+  443  cp nginx-rc.yaml rs.yaml
+  444  vi rs.yaml 
+  445  kubectl get pod
+  446  kubectl delete -f nginx-rc.yaml 
+  447  kubectl get pod
+  448  kubectl create -f pod.yaml 
+  449  kubectl get pod --show-labels 
+  450  vi rs.yaml 
+  451  kubectl get pod --show-labels 
+  452  kubectl create -f rs.yaml 
+  453  kubectl get pod --show-labels 
+  454  vi rs.yaml 
+  455  kubectl create -f rs.yaml 
+  456  vi rs.yaml 
+  457  kubectl create -f rs.yaml 
+  458  kubectl get rs
+  459  kubectl get pod --show-labels 
+  460  kubectl set image replicaset myrs nginx=httpd:latest
+  461  kubectl get pod --show-labels 
+  462  kubectl get rs -o wide
+  463  kubectl get pod --show-labels 
+  464  kubectl describe pod myrs-dlhzp
+  465  kubectl get pod --show-labels 
+  466  kubectl scale replicaset myrs --replicas=5
+  467  kubectl get pod --show-labels 
+  468  kubectl scale replicaset myrs --replicas=21
+  469  kubectl get pod --show-labels 
+  470  kubectl scale replicaset myrs --replicas=2
+  471  kubectl get pod --show-labels 
+  472  kubectl delete -f rs.yaml 
+  473  kubectl get pod
+  474  vi deployment.yaml
+  475  vi deployment.yaml 
+  476  vi pod-svc.yaml 
+  477  vi deployment.yaml 
+  478  kubectl create -f deployment.yaml 
+  479  kubectl get deployments.apps 
+  480  kubectl get pod
+  481  kubectl get svc
+  482  kubectl get pod
+  483  kubectl get pod --show-labels 
+  484  kubectl get rs
+  485  kubectl scale deployment nginx-deployment --replicas=6
+  486  kubectl get rs
+  487  kubectl get pod
+  488  kubectl scale deployment nginx-deployment --replicas=3
+  489  kubectl get pod
+  490  kubectl get deployments.apps 
+  491  kubectl get rs
+  492  kubectl get deployments.apps  -o wide
+  493  kubectl describe deployments.apps nginx-deployment
+  494  kubectl get deployments.apps  -o wide
+  495  kubectl set image deployments.apps nginx-deployment nginx=httpd:latest 
+  496  kubectl get deployments.apps  -o wide
+  497  kubectl get pod
+  498  kubectl get rs
+  499  kubectl rollout history deployment nginx-deployment 
+  500  kubectl rollout history deployment nginx-deployment --revision=2
+  501  kubectl annotate deployments.apps nginx-deployment kubernetes.io/chage-cause="updated httpd"
+  502  kubectl rollout history deployment nginx-deployment 
+  503  kubectl annotate deployments.apps nginx-deployment kubernetes.io/change-cause="updated httpd"
+  504  kubectl rollout history deployment nginx-deployment 
+  505  kubectl edit deployments.apps nginx-deployment 
+  506  kubectl set image deployments.apps nginx-deployment nginx=966145/myserver121:latest
+  507  kubectl rollout history deployment nginx-deployment 
+  508  kubectl annotate deployments.apps nginx-deployment kubernetes.io/change-cause="myserver app deployed"
+  509  kubectl rollout history deployment nginx-deployment 
+  510  kubectl get deployments.apps -o wide
+  511  kubectl get rs
+  512  kubectl get pod
+  513  kubectl rollout history deployment nginx-deployment 
+  514  kubectl rollout undo deployment nginx-deployment --to-revision 1
+  515  kubectl get deployments.apps -o wide
+  516  kubectl get pod 
+  517  kubectl get rs
+  518  kubectl rollout history deployment nginx-deployment 
+  519  kubectl annotate deployments.apps nginx-deployment kubernetes.io/change-cause="nginx app"
+  520  kubectl rollout history deployment nginx-deployment 
+  521  kubectl rollout undo deployment nginx-deployment --to-revision 2
+  522  kubectl rollout history deployment nginx-deployment 
+  523  kubectl get deployments.apps -o wide
+  524  kubectl get deployments.apps 
+  525  #kubectl autoscale deployment nginx-deployment --min 3
+  526  vi deployment.yaml 
+  527  kubectl autoscale deployment nginx-deployment --min=3 --max=10 --cpu-percent=65 --dry-run=client -o yaml
+  528  kubectl autoscale deployment nginx-deployment --min=3 --max=10 --cpu-percent=65 --dry-run=client -o yaml > hpa.yaml
+  529  vi hpa.yaml 
+  530  kubectl create -f hpa.yaml 
+  531  kubectl get hpa
+  532  kubectl get pod -n kube-system 
+  533  kubectl get hpa
+  534  kubectl top pods
+  535  kubectl top nodes
+  536  kubectl get hpa
+  537  vi daemon.yaml
+  538  kubectl get pod
+  539  kubectl get node
+  540  vi daemon.yaml
+  541  kubectl create -f daemon.yaml 
+  542  kubectl get pods
+  543  kubectl get pods -o wide
+  544  kubectl get nodes
+  545  git add .
+  546  git commit -m "daemonset deployment"
+  547  git push origin main 
+  548  history 
+  549  cd myapp/
+  550  history > cmd.txt
