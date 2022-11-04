@@ -17,6 +17,13 @@ spec:
         image: nginx:1.7.9
         ports:
         - containerPort: 80
+#        resources:
+#          requests:
+#             cpu: 0.5m
+#             memory: 256Mi
+#          limits:
+#             cpu: 1
+#             memory: 512Mi
 
 ---
 apiVersion: v1
@@ -24,7 +31,7 @@ kind: Service
 metadata:
   name: mydep-svc
 spec:
-  type: LoadBalancer
+        #  type: LoadBalancer
   selector:
      app: nginx
   ports:
